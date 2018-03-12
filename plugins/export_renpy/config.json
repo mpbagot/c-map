@@ -1,0 +1,5 @@
+{
+  "name" : "Ren'Py Exporter",
+  "version" : 0.1,
+  "supports" : ["voice_sync", "animator"]
+}
