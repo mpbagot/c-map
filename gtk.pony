@@ -34,20 +34,28 @@ primitive _GCallback
 
 class GtkApplication
 
-  var windows: Array[GtkWindow]
-  var cpointer: Pointer[_GtkApplication] val
+  var _windows: Array[GtkWindow]
+  var _cpointer: Pointer[_GtkApplication] val
 
-  new create(org_name: String) =>
-    cpointer = recover val
+  var config: Config
+
+  new create(org_name: String, env: Env) =>
+    _cpointer = recover val
       @gtk_application_new(org_name.cstring(), 0)
     end
-    windows = []
+
+    _windows = []
+    // Load the config (and project file if required) from the environment args
+    config = Config(env)
 
   fun get_pointer(): Pointer[_GtkApplication] val =>
-    cpointer
+    _cpointer
 
   fun cast_to_g_app(): Pointer[_GApplication] val =>
     @g_application_cast(this.get_pointer())
+
+  fun ref set_config(new_config: Config): None =>
+    this.config = new_config
 
   fun register_callback(callback_event: String, callback: _GCallback, data: U8) =>
     // Register the activate function as a callback for app startup
@@ -66,19 +74,21 @@ class GtkWindow
   var title: String
   var size: Array[I32]
 
+  var window: Pointer[_GtkWidget]
+
   new create(app: Pointer[_GtkApplication] val, win_title: String, win_size: Array[I32]) =>
     title = win_title
     size = win_size
 
-    var app_cast = @g_application_cast(app)
-
     // Call the GTK library to make a new window for the application
-    var window = @gtk_application_window_new[Pointer[_GtkWidget]](app)
+    window = @gtk_application_window_new[Pointer[_GtkWidget]](app)
     // Set the title
     @gtk_window_set_title[None](@gtk_window_cast(window), title.cstring())
     // Set the window size
     try
       @gtk_window_set_default_size[None](@gtk_window_cast(window), size.apply(0)?, size.apply(1)?)
     end
+
+  fun show_window() =>
     // Make it visible
     @gtk_widget_show_all[None](window)
