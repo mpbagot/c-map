@@ -14,10 +14,15 @@ use "lib:gtkhelp"
 
 use @gtk_application_new[Pointer[_GtkApplication]](application_id: Pointer[U8] tag, flags: U8)
 use @gtk_application_window_new[Pointer[_GtkWidget]](app: Pointer[_GtkApplication] val)
-use @g_signal_connect_generic[None](instance: Pointer[_GtkApplication] val, detailed_signal: Pointer[U8] tag, c_handler: _GCallback, data: U8)
+use @g_signal_connect_generic[None](
+                                    instance: Pointer[_GtkApplication] val,
+                                    detailed_signal: Pointer[U8] tag,
+                                    c_handler: _GCallback,
+                                    data: Any
+                                   )
 
 use @g_application_cast[Pointer[_GApplication] val](app: Pointer[_GtkApplication] val)
-use @g_callback_cast[_GCallback](func: @{(Pointer[_GtkApplication] val, U8): None})
+use @g_callback_cast[_GCallback](func: @{(Pointer[_GtkApplication] val, Any ref): None})
 use @gtk_window_cast[Pointer[_GtkWindow]](window: Pointer[_GtkWidget])
 
 primitive _GtkApplication
@@ -57,9 +62,12 @@ class GtkApplication
   fun ref set_config(new_config: Config): None =>
     this.config = new_config
 
-  fun register_callback(callback_event: String, callback: _GCallback, data: U8) =>
+  fun register_callback(callback_event: String, callback: _GCallback, data: Any) =>
     // Register the activate function as a callback for app startup
     @g_signal_connect_generic(this.get_pointer(), callback_event.cstring(), callback, data)
+
+  fun ref add_window(window: GtkWindow ref) =>
+    _windows.push(window)
 
   fun run(env: Env): U8 =>
     // Run the program
@@ -76,18 +84,21 @@ class GtkWindow
 
   var window: Pointer[_GtkWidget]
 
-  new create(app: Pointer[_GtkApplication] val, win_title: String, win_size: Array[I32]) =>
+  new create(app: GtkApplication, win_title: String, win_size: Array[I32]) =>
     title = win_title
     size = win_size
 
     // Call the GTK library to make a new window for the application
-    window = @gtk_application_window_new[Pointer[_GtkWidget]](app)
+    window = @gtk_application_window_new[Pointer[_GtkWidget]](app.get_pointer())
     // Set the title
     @gtk_window_set_title[None](@gtk_window_cast(window), title.cstring())
     // Set the window size
     try
       @gtk_window_set_default_size[None](@gtk_window_cast(window), size.apply(0)?, size.apply(1)?)
     end
+
+    // Notify the application about the new window
+    app.add_window(this)
 
   fun show_window() =>
     // Make it visible
