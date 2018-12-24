@@ -15,3 +15,8 @@ GCallback g_callback_cast(void *activate) {
 GtkWindow* gtk_window_cast(GtkWidget *window) {
   return GTK_WINDOW (window);
 }
+
+GError* g_error_new_for_pony() {
+  GError* err = NULL;
+  return err;
+}
