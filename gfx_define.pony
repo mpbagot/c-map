@@ -15,6 +15,7 @@ use "lib:gtkhelp"
 use @gtk_application_new[Pointer[_GtkApplication]](application_id: Pointer[U8] tag, flags: U8)
 use @gtk_application_window_new[Pointer[_GtkWidget]](app: Pointer[_GtkApplication] val)
 use @gtk_builder_new[Pointer[_GtkBuilder]]()
+use @gtk_builder_new_from_string[Pointer[_GtkBuilder]](string: Pointer[U8] tag, len: USize)
 use @g_error_new_for_pony[Pointer[_GError]]()
 
 use @g_signal_connect_generic[None](instance: Pointer[_GtkApplication] val, signal_name: Pointer[U8] tag, c_handler: _GCallback, data: Any)

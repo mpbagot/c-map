@@ -14,7 +14,11 @@ class UILoader
     builder = @gtk_builder_new()
     env = envir
 
-  fun ref load_ui_from_file(filename: String) ? =>
+  new from_string(ui_string: String, envir: Env) =>
+    env = envir
+    builder = @gtk_builder_new_from_string(ui_string.cstring(), ui_string.size())
+
+  fun ref load_ui_from_file(filename: String): None ? =>
     var err: Pointer[_GError] = @g_error_new_for_pony()
 
     if @gtk_builder_add_from_file(builder, filename.cstring(), addressof err) == U8(0) then
