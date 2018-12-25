@@ -18,7 +18,8 @@ actor Main
     try
       // TODO remove this once window layout loading is done
       var app_pony: GtkApplication = user_data as GtkApplication
-      GtkWindow(app_pony, "C-MAP", [I32(1024); I32(576)]).show_window()
+      GtkWindow(app_pony, WindowType.application(), "C-MAP", [I32(1024); I32(576)]).show_window()
+      GtkWindow(app_pony, WindowType.toplevel(), "Toplevel Test", [I32(1024); I32(576)]).show_window()
     end
 
 
