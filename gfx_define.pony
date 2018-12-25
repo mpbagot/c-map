@@ -45,6 +45,7 @@ primitive _GtkBuilder
 
 primitive _GdkPixbuf
 primitive _GdkPixbufFormat
+primitive _GdkScreen
 
 primitive _GApplication
 primitive _GObject

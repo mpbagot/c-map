@@ -2,6 +2,7 @@ class GtkApplication
 
   var _windows: Array[GtkWindow]
   var _cpointer: Pointer[_GtkApplication] val
+  var environment: Env
 
   var config: Config
 
@@ -9,6 +10,8 @@ class GtkApplication
     _cpointer = recover val
       @gtk_application_new(org_name.cstring(), 0)
     end
+
+    environment = env
 
     _windows = []
     // Load the config (and project file if required) from the environment args
@@ -43,11 +46,14 @@ class GtkWindow
   var title: String
   var size: Array[I32]
 
+  var env: Env
+
   var window: Pointer[_GtkWidget]
 
   new create(app: GtkApplication, win_type: U8, win_title: String, win_size: Array[I32]) =>
     title = win_title
     size = win_size
+    env = app.environment
 
     if win_type == WindowType.application() then
       // Call the GTK library to make a new window for the application
@@ -69,3 +75,15 @@ class GtkWindow
   fun show_window() =>
     // Make it visible
     @gtk_widget_show_all[None](window)
+
+  fun move(x: U16, y: U16) =>
+    @gtk_window_move[None](window, x, y)
+
+  fun bring_to_top() =>
+    @gtk_window_present[None](window)
+
+  fun get_screen(): Pointer[_GdkScreen] =>
+    @gtk_window_get_screen[Pointer[_GdkScreen]](window)
+
+  fun set_screen(screen: Pointer[_GdkScreen]) =>
+    @gtk_window_set_screen[None](window, screen)
