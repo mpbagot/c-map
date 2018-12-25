@@ -45,12 +45,17 @@ class GtkWindow
 
   var window: Pointer[_GtkWidget]
 
-  new create(app: GtkApplication, win_title: String, win_size: Array[I32]) =>
+  new create(app: GtkApplication, win_type: U8, win_title: String, win_size: Array[I32]) =>
     title = win_title
     size = win_size
 
-    // Call the GTK library to make a new window for the application
-    window = @gtk_application_window_new[Pointer[_GtkWidget]](app.get_pointer())
+    if win_type == WindowType.application() then
+      // Call the GTK library to make a new window for the application
+      window = @gtk_application_window_new(app.get_pointer())
+    else
+      window = @gtk_window_new(win_type)
+    end
+
     // Set the title
     @gtk_window_set_title[None](@gtk_window_cast(window), title.cstring())
     // Set the window size

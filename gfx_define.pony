@@ -14,6 +14,7 @@ use "lib:gtkhelp"
 
 use @gtk_application_new[Pointer[_GtkApplication]](application_id: Pointer[U8] tag, flags: U8)
 use @gtk_application_window_new[Pointer[_GtkWidget]](app: Pointer[_GtkApplication] val)
+use @gtk_window_new[Pointer[_GtkWidget]](win_type: U8)
 use @gtk_builder_new[Pointer[_GtkBuilder]]()
 use @gtk_builder_new_from_string[Pointer[_GtkBuilder]](string: Pointer[U8] tag, len: USize)
 use @g_error_new_for_pony[Pointer[_GError]]()
@@ -31,6 +32,11 @@ use @gdk_pixbuf_get_file_info[Pointer[_GdkPixbufFormat]](filename: Pointer[U8] t
 
 use @gtk_builder_add_from_file[U8](builder: Pointer[_GtkBuilder], filename: Pointer[U8] tag, err: Pointer[Pointer[_GError]])
 use @gtk_builder_get_object[Pointer[_GObject]](builder: Pointer[_GtkBuilder], object_id: Pointer[U8] tag)
+
+primitive WindowType
+  fun toplevel(): U8 => 0
+  fun popup(): U8 => 1
+  fun application(): U8 => 2
 
 primitive _GtkApplication
 primitive _GtkWidget
