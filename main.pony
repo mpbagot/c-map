@@ -3,7 +3,7 @@ actor Main
     // Initialise the GTK application
     var app = GtkApplication("org.rest_ashore.cmap", env)
 
-    var callback = @g_callback_cast(addressof this.init_workspace)
+    var callback = @g_callback_activate_cast(addressof this.init_workspace)
     app.register_callback("activate", callback, app)
 
     // This call locks up this thread

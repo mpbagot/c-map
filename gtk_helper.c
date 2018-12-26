@@ -8,7 +8,7 @@ GApplication* g_application_cast(GtkApplication* app) {
   return G_APPLICATION(app);
 }
 
-GCallback g_callback_cast(void *activate) {
+GCallback g_callback_activate_cast(void *activate) {
   return G_CALLBACK (activate);
 }
 

@@ -23,7 +23,7 @@ use @g_signal_connect_generic[None](instance: Pointer[_GtkApplication] val, sign
 use @g_signal_connect[None](obj: Pointer[_GObject], signal_name: Pointer[U8] tag, c_handler: _GCallback, data: Any)
 
 use @g_application_cast[Pointer[_GApplication] val](app: Pointer[_GtkApplication] val)
-use @g_callback_cast[_GCallback](func: @{(Pointer[_GtkApplication] val, Any ref): None})
+use @g_callback_activate_cast[_GCallback](func: @{(Pointer[_GtkApplication] val, Any ref): None})
 use @gtk_window_cast[Pointer[_GtkWindow]](window: Pointer[_GtkWidget])
 
 use @gdk_pixbuf_new_from_file[Pointer[_GdkPixbuf]](filename: Pointer[U8] tag, err: Pointer[Pointer[_GError]])
