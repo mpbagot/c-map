@@ -1,3 +1,5 @@
+use "files"
+
 class GtkApplication
 
   var _windows: Array[GtkWindow]
@@ -32,6 +34,29 @@ class GtkApplication
 
   fun ref add_window(window: GtkWindow ref) =>
     _windows.push(window)
+
+  fun ref save_to_ui_file(filename: String): None =>
+    var ui_string = get_ui_string()
+    try
+      // Set up file permissions
+      let caps = recover val
+        FileCaps.>set(FileRead).>set(FileStat).>set(FileWrite).>set(FileSync).>set(FileCreate)
+      end
+      // Try to open the file
+      var filepath: FilePath = FilePath(environment.root as AmbientAuth, filename, caps)?
+      var file = File(filepath)
+      // Write the layout string
+      file.write(ui_string)
+      // Sync, save, and close
+      file.sync()
+      file.dispose()
+    else
+      environment.out.print("[ERROR] File Error. Are permissions correct?")
+    end
+    None
+
+  fun ref get_ui_string(): String =>
+    ""
 
   fun run(env: Env): U8 =>
     // Run the program
