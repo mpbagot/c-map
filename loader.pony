@@ -18,6 +18,14 @@ class UILoader
     env = envir
     builder = @gtk_builder_new_from_string(ui_string.cstring(), ui_string.size())
 
+  fun ref load_ui_from_string(ui_str: String): None ? =>
+    var err: Pointer[_GError] = @g_error_new_for_pony()
+
+    if @gtk_builder_add_from_string[U8](builder, ui_str.cstring(), addressof err) == U8(0) then
+      env.out.print("[WARNING] Syntax error with ui_string. UI elements were not loaded.")
+      error
+    end
+
   fun ref load_ui_from_file(filename: String): None ? =>
     var err: Pointer[_GError] = @g_error_new_for_pony()
 
