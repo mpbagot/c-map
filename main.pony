@@ -8,7 +8,7 @@ actor Main
 
     // This call locks up this thread
     // Actors should be forked before this spot in the code
-    app.run(env)
+    app.run(None)
 
   fun @init_workspace(app: Pointer[_GtkApplication] val, user_data: Any ref) =>
     // TODO The window layouts need to be loaded from a file

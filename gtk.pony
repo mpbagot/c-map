@@ -58,11 +58,20 @@ class GtkApplication
   fun ref get_ui_string(): String =>
     ""
 
-  fun run(env: Env): U8 =>
-    // Run the program
-    var status: U8 = @g_application_run[U8](this.cast_to_g_app(), env.args.size(), env.args.cpointer())
+  fun run(env: (Env | None)): U8 =>
+    var status: U8 = 0
+
+    try
+      var env2 = env as Env
+      // Run the program
+      status = @g_application_run[U8](cast_to_g_app(), env2.args.size(), env2.args.cpointer())
+    else
+      // Run the program
+      status = @g_application_run[U8](cast_to_g_app(), U8(0), Array[String]())
+    end
+    
     // Clear memory afterwards
-    @g_object_unref[None](this.get_pointer())
+    @g_object_unref[None](get_pointer())
     // Return the status integer
     status
 
