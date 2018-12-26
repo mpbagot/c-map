@@ -1,4 +1,5 @@
 use "files"
+use "options"
 
 class Config
 
@@ -7,23 +8,38 @@ class Config
 
   new create(env: Env) =>
     let caps = recover val FileCaps.>set(FileRead).>set(FileStat) end
+    var options = Options(env.args.slice(1, env.args.size(), 1))
 
-    for arg in env.args.slice(1, env.args.size(), 1).values() do
-      if arg.at("--", 0) then
-        // Argument is a config option
-        // TODO What config options are available?
-        U8(0)
-      else
+    // TODO What config options are available?
+    options
+      .add("headless")
+      .add("help")
+
+    for option in options do
+      match option
+      | ("headless", let arg: None) => env.out.print("headless arg seen")
+      | let err: ParseError => err.report(env.out); env.out.print("Use --help to list options.")
+      end
+    end
+
+    for arg in options.remaining().values() do
+      if not arg.at("-", 0) then
+        var valarg = recover val
+          arg.clone()
+        end
         // Argument is a project file name
         try
-          var filepath = FilePath(env.root as AmbientAuth, arg, caps)?
+          var filepath: FilePath = FilePath(env.root as AmbientAuth, valarg, caps)?
 
           if not filepath.exists() then
-            env.out.print("[WARNING] Project File couldn't be loaded.")
+            env.out.print("[WARNING] Project file \"" + valarg + "\" couldn't be loaded.")
           else
-            env.out.print("[NOTE] Loading project file: " + arg)
+            env.out.print("[NOTE] Loading project file: " + valarg)
             project_file = ProjectLoader.load_project(this, filepath)
           end
         end
       end
     end
+
+  fun usage(env: Env) =>
+    env.out.print("C-MAP Configuration Argument Options:")
