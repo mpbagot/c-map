@@ -3,10 +3,6 @@
     {
       "type": "github",
       "repo": "jemc/ponycc"
-    },
-    {
-      "type": "github",
-      "repo": "jemc/pony-jason"
     }
   ]
 }
