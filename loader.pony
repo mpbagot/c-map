@@ -1,9 +1,14 @@
 use "files"
+use "json"
 
-class ProjectLoader
-  fun load_project(config: Config, filepath: FilePath): File =>
-    // TODO What is the structure for the project files?
-    File.open(filepath)
+class ProjectFile
+  new create(config: Config, filepath: FilePath) =>
+
+    U8(0)
+
+  new load(config: Config, filepath: FilePath) =>
+    // TODO Unzip the file, parse the JSON config, and load everything into
+    U8(0)
 
 class UILoader
 

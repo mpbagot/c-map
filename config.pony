@@ -3,7 +3,7 @@ use "options"
 
 class Config
 
-  var project_file: (File | None) = None
+  var project_file: (ProjectFile | None) = None
   var ui_string: (String | None) = None
 
   new create(env: Env) =>
@@ -35,7 +35,7 @@ class Config
             env.out.print("[WARNING] Project file \"" + valarg + "\" couldn't be loaded.")
           else
             env.out.print("[NOTE] Loading project file: " + valarg)
-            project_file = ProjectLoader.load_project(this, filepath)
+            project_file = ProjectFile.load(this, filepath)
           end
         end
       end
