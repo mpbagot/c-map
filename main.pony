@@ -10,7 +10,7 @@ actor Main
     // Actors should be forked before this spot in the code
     app.run(None)
 
-  fun @init_workspace(app: Pointer[_GtkApplication] val, user_data: Any ref) =>
+  fun @init_workspace(app: Pointer[_GtkApplication] tag, user_data: Any ref) =>
     // TODO The window layouts need to be loaded from a file
     // TODO Project files store layout and take priority
     // TODO but a global workspace layout is also stored

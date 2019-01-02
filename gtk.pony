@@ -3,13 +3,13 @@ use "files"
 class GtkApplication
 
   var _windows: Array[GtkWindow]
-  var _cpointer: Pointer[_GtkApplication] val
+  var _cpointer: Pointer[_GtkApplication] tag
   var environment: Env
 
   var config: Config
 
   new create(org_name: String, env: Env) =>
-    _cpointer = recover val
+    _cpointer = recover tag
       @gtk_application_new(org_name.cstring(), 0)
     end
 
@@ -19,10 +19,10 @@ class GtkApplication
     // Load the config (and project file if required) from the environment args
     config = Config(env)
 
-  fun get_pointer(): Pointer[_GtkApplication] val =>
+  fun get_pointer(): Pointer[_GtkApplication] tag =>
     _cpointer
 
-  fun cast_to_g_app(): Pointer[_GApplication] val =>
+  fun cast_to_g_app(): Pointer[_GApplication] tag =>
     @g_application_cast(this.get_pointer())
 
   fun ref set_config(new_config: Config): None =>
@@ -69,7 +69,7 @@ class GtkApplication
       // Run the program
       status = @g_application_run[U8](cast_to_g_app(), U8(0), Array[String]())
     end
-    
+
     // Clear memory afterwards
     @g_object_unref[None](get_pointer())
     // Return the status integer

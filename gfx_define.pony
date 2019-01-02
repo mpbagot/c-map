@@ -12,18 +12,18 @@ use "lib:gio-2.0"
 use "path:./"
 use "lib:gtkhelp"
 
-use @gtk_application_new[Pointer[_GtkApplication]](application_id: Pointer[U8] tag, flags: U8)
-use @gtk_application_window_new[Pointer[_GtkWidget]](app: Pointer[_GtkApplication] val)
+use @gtk_application_new[Pointer[_GtkApplication] tag](application_id: Pointer[U8] tag, flags: U8)
+use @gtk_application_window_new[Pointer[_GtkWidget]](app: Pointer[_GtkApplication] tag)
 use @gtk_window_new[Pointer[_GtkWidget]](win_type: U8)
 use @gtk_builder_new[Pointer[_GtkBuilder]]()
 use @gtk_builder_new_from_string[Pointer[_GtkBuilder]](string: Pointer[U8] tag, len: USize)
 use @g_error_new_for_pony[Pointer[_GError]]()
 
-use @g_signal_connect_generic[None](instance: Pointer[_GtkApplication] val, signal_name: Pointer[U8] tag, c_handler: _GCallback, data: Any)
+use @g_signal_connect_generic[None](instance: Pointer[_GtkApplication] tag, signal_name: Pointer[U8] tag, c_handler: _GCallback, data: Any)
 use @g_signal_connect[None](obj: Pointer[_GObject], signal_name: Pointer[U8] tag, c_handler: _GCallback, data: Any)
 
-use @g_application_cast[Pointer[_GApplication] val](app: Pointer[_GtkApplication] val)
-use @g_callback_activate_cast[_GCallback](func: @{(Pointer[_GtkApplication] val, Any ref): None})
+use @g_application_cast[Pointer[_GApplication] tag](app: Pointer[_GtkApplication] tag)
+use @g_callback_activate_cast[_GCallback](func: @{(Pointer[_GtkApplication] tag, Any ref): None})
 use @gtk_window_cast[Pointer[_GtkWindow]](window: Pointer[_GtkWidget])
 
 use @gdk_pixbuf_new_from_file[Pointer[_GdkPixbuf]](filename: Pointer[U8] tag, err: Pointer[Pointer[_GError]])
