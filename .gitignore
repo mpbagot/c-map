@@ -1,0 +1,6 @@
+*.a
+*.o
+c-map
+*.jpg
+*.png
+libzip.so
