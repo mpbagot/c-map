@@ -8,6 +8,8 @@ class GtkApplication
 
   var config: Config
 
+  var _saved: Bool = true
+
   new create(org_name: String, env: Env) =>
     _cpointer = recover tag
       @gtk_application_new(org_name.cstring(), 0)
@@ -35,6 +37,14 @@ class GtkApplication
   fun ref add_window(window: GtkWindow ref) =>
     @gtk_application_add_window(_cpointer, window.get_pointer())
     _windows.push(window)
+
+  fun ref mark_as_need_save() =>
+    if _saved then
+      for window in _windows.values() do
+        window.set_title(window.get_title() + " *")
+      end
+    end
+    _saved = false
 
   fun ref save_to_ui_file(filename: String): None =>
     var ui_string = get_ui_string()
@@ -103,10 +113,10 @@ class GtkWindow
     _cpointer = @gtk_window_cast(window)
 
     // Set the title
-    @gtk_window_set_title[None](@gtk_window_cast(window), title.cstring())
+    set_title(title)
     // Set the window size
     try
-      @gtk_window_set_default_size[None](@gtk_window_cast(window), size.apply(0)?, size.apply(1)?)
+      @gtk_window_set_default_size[None](_cpointer, size.apply(0)?, size.apply(1)?)
     end
 
     // Notify the application about the new window
@@ -124,6 +134,13 @@ class GtkWindow
 
   fun get_pointer(): Pointer[_GtkWindow] tag =>
     _cpointer
+
+  fun get_title(): String =>
+    title
+
+  fun ref set_title(new_title: String) =>
+    title = new_title
+    @gtk_window_set_title[None](_cpointer, title.cstring())
 
   fun get_screen(): Pointer[_GdkScreen] =>
     @gtk_window_get_screen[Pointer[_GdkScreen]](window)
