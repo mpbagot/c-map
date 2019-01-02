@@ -23,16 +23,17 @@ class GtkApplication
     _cpointer
 
   fun cast_to_g_app(): Pointer[_GApplication] tag =>
-    @g_application_cast(this.get_pointer())
+    @g_application_cast(_cpointer)
 
   fun ref set_config(new_config: Config): None =>
     this.config = new_config
 
   fun register_callback(callback_event: String, callback: _GCallback, data: Any) =>
     // Register the activate function as a callback for app startup
-    @g_signal_connect_generic(this.get_pointer(), callback_event.cstring(), callback, data)
+    @g_signal_connect_generic(_cpointer, callback_event.cstring(), callback, data)
 
   fun ref add_window(window: GtkWindow ref) =>
+    @gtk_application_add_window(_cpointer, window.get_pointer())
     _windows.push(window)
 
   fun ref save_to_ui_file(filename: String): None =>
@@ -72,10 +73,13 @@ class GtkApplication
 
     // Clear memory afterwards
     @g_object_unref[None](get_pointer())
+
     // Return the status integer
     status
 
 class GtkWindow
+
+  var _cpointer: Pointer[_GtkWindow] tag
 
   var title: String
   var size: Array[I32]
@@ -96,6 +100,8 @@ class GtkWindow
       window = @gtk_window_new(win_type)
     end
 
+    _cpointer = @gtk_window_cast(window)
+
     // Set the title
     @gtk_window_set_title[None](@gtk_window_cast(window), title.cstring())
     // Set the window size
@@ -115,6 +121,9 @@ class GtkWindow
 
   fun bring_to_top() =>
     @gtk_window_present[None](window)
+
+  fun get_pointer(): Pointer[_GtkWindow] tag =>
+    _cpointer
 
   fun get_screen(): Pointer[_GdkScreen] =>
     @gtk_window_get_screen[Pointer[_GdkScreen]](window)

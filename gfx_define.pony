@@ -33,6 +33,8 @@ use @gdk_pixbuf_get_file_info[Pointer[_GdkPixbufFormat]](filename: Pointer[U8] t
 use @gtk_builder_add_from_file[U8](builder: Pointer[_GtkBuilder], filename: Pointer[U8] tag, err: Pointer[Pointer[_GError]])
 use @gtk_builder_get_object[Pointer[_GObject]](builder: Pointer[_GtkBuilder], object_id: Pointer[U8] tag)
 
+use @gtk_application_add_window[None](app: Pointer[_GtkApplication] tag, window: Pointer[_GtkWindow] tag)
+
 primitive WindowType
   fun toplevel(): U8 => 0
   fun popup(): U8 => 1
