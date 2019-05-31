@@ -10,7 +10,7 @@ class GtkApplication
 
   var _saved: Bool = true
 
-  new create(org_name: String, env: Env) =>
+  new create(org_name: String, env: Env) ? =>
     _cpointer = recover tag
       @gtk_application_new(org_name.cstring(), 0)
     end
@@ -19,7 +19,7 @@ class GtkApplication
 
     _windows = []
     // Load the config (and project file if required) from the environment args
-    config = Config(env)
+    config = Config(env)?
 
   fun get_pointer(): Pointer[_GtkApplication] tag =>
     _cpointer

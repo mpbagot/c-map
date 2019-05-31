@@ -1,7 +1,12 @@
 actor Main
   new create(env: Env) =>
     // Initialise the GTK application
-    var app = GtkApplication("org.rest_ashore.cmap", env)
+    var app =
+      try
+        GtkApplication("org.rest_ashore.cmap", env)?
+      else
+        return
+      end
 
     var callback = @g_callback_activate_cast(addressof this.init_workspace)
     app.register_callback("activate", callback, app)
