@@ -24,6 +24,7 @@ use @g_signal_connect[None](obj: Pointer[_GObject], signal_name: Pointer[U8] tag
 use @g_application_cast[Pointer[_GApplication] tag](app: Pointer[_GtkApplication] tag)
 use @g_callback_activate_cast[_GCallback](func: @{(Pointer[_GtkApplication] tag, Any ref): None})
 use @gtk_window_cast[Pointer[_GtkWindow]](window: Pointer[_GtkWidget])
+use @gtk_widget_cast[Pointer[_GtkWidget]](widget: Pointer[_GObject])
 
 use @gdk_pixbuf_new_from_file[Pointer[_GdkPixbuf]](filename: Pointer[U8] tag, err: Pointer[Pointer[_GError]])
 use @gdk_pixbuf_scale_simple[Pointer[_GdkPixbuf]](src: Pointer[_GdkPixbuf], dest_width: U16, dest_height: U16, interp_type: U8)
@@ -31,6 +32,7 @@ use @gdk_pixbuf_get_file_info[Pointer[_GdkPixbufFormat]](filename: Pointer[U8] t
 
 use @gtk_builder_add_from_file[U8](builder: Pointer[_GtkBuilder], filename: Pointer[U8] tag, err: Pointer[Pointer[_GError]])
 use @gtk_builder_get_object[Pointer[_GObject]](builder: Pointer[_GtkBuilder], object_id: Pointer[U8] tag)
+use @gtk_builder_connect_signals[None](builder: Pointer[_GtkBuilder], data: Any)
 
 use @gtk_application_add_window[None](app: Pointer[_GtkApplication] tag, window: Pointer[_GtkWindow] tag)
 

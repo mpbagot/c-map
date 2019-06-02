@@ -15,3 +15,7 @@ GCallback g_callback_activate_cast(void *activate) {
 GtkWindow* gtk_window_cast(GtkWidget *window) {
   return GTK_WINDOW (window);
 }
+
+GtkWidget* gtk_widget_cast(GObject *widget) {
+  return GTK_WIDGET (widget);
+}
