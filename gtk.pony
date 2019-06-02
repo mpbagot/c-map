@@ -136,8 +136,6 @@ class GtkWindow
   var title: String
   var size: Array[I32]
 
-  var env: Env
-
   var window: Pointer[_GtkWidget]
 
   new create(app: GtkApplication, win_type: U8, win_title: String, win_size: Array[I32]) =>
@@ -146,7 +144,6 @@ class GtkWindow
     """
     title = win_title
     size = win_size
-    env = app.environment
 
     window =
     if win_type == WindowType.application() then
@@ -164,6 +161,27 @@ class GtkWindow
     try
       @gtk_window_set_default_size[None](_cpointer, size.apply(0)?, size.apply(1)?)
     end
+
+    // Notify the application about the new window
+    app.add_window(this)
+
+  new from_pointer(app: GtkApplication, ptr: Pointer[_GtkWidget]) =>
+    // Set up pointers
+    window = ptr
+    _cpointer = @gtk_window_cast(window)
+
+    // Get the window size
+    var w: I32 = 0
+    var h: I32 = 0
+    @gtk_window_get_size[None](_cpointer, addressof w, addressof h)
+    // And set it
+    size = [w; h]
+    try
+      @gtk_window_set_default_size[None](_cpointer, size.apply(0)?, size.apply(1)?)
+    end
+
+    // Get the window title
+    title = recover String.copy_cstring(@gtk_window_get_title[Pointer[U8]](_cpointer)) end
 
     // Notify the application about the new window
     app.add_window(this)
@@ -215,6 +233,6 @@ class GtkWindow
 
   fun set_screen(screen: Pointer[_GdkScreen]) =>
     """
-
+    Set the screen which this window is on.
     """
     @gtk_window_set_screen[None](window, screen)
