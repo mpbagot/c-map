@@ -17,7 +17,6 @@ use @gtk_application_window_new[Pointer[_GtkWidget]](app: Pointer[_GtkApplicatio
 use @gtk_window_new[Pointer[_GtkWidget]](win_type: U8)
 use @gtk_builder_new[Pointer[_GtkBuilder]]()
 use @gtk_builder_new_from_string[Pointer[_GtkBuilder]](string: Pointer[U8] tag, len: USize)
-use @g_error_new_for_pony[Pointer[_GError]]()
 
 use @g_signal_connect_generic[None](instance: Pointer[_GtkApplication] tag, signal_name: Pointer[U8] tag, c_handler: _GCallback, data: Any)
 use @g_signal_connect[None](obj: Pointer[_GObject], signal_name: Pointer[U8] tag, c_handler: _GCallback, data: Any)
