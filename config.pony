@@ -2,11 +2,18 @@ use "files"
 use "cli"
 
 class Config
+  """
+  The Config class holds configuration data about C-MAP, read from command line
+  arguments.
+  """
 
   var project_file: (ProjectFile | None) = None
   var ui_string: (String | None) = None
 
   new create(env: Env) ? =>
+    """
+    Create a new configuration from the arguments provided by `env`.
+    """
     let caps = recover val FileCaps.>set(FileRead).>set(FileStat) end
 
     // TODO What config options are available?
