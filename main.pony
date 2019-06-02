@@ -23,19 +23,22 @@ actor Main
 
     try
       var app_pony: GtkApplication = user_data as GtkApplication
-      var builder: UILoader = UILoader(app_pony.environment)
+      var builder: UILoader = UILoader(app_pony)
       try
         let str = app_pony.config.ui_string as String
         if str != "" then
           // Load the pre-loaded project file from the config here
           builder.load_ui_from_string(app_pony.config.ui_string as String)?
         else
-          // TODO remove this once window layout loading is done
-          GtkWindow(app_pony, WindowType.application(), "C-MAP", [I32(1024); I32(576)]).show_window()
-          GtkWindow(app_pony, WindowType.toplevel(), "Toplevel Test", [I32(1024); I32(576)]).show_window()
-
-          // Load the default program layout here
-          //builder.load_ui_from_file("default.ui")
+          try
+            // Load the default program layout here
+            @printf[None]("Loading default UI...\n".cstring())
+            builder.load_ui_from_file("default.ui")?
+            @printf[None]("Default UI loaded.\n".cstring())
+          else
+            @printf[None]("[ERROR] Default UI file not found!\n".cstring())
+            return
+          end
         end
       else
         // TODO Do something so that the application doesn't immediately exit

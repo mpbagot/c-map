@@ -28,19 +28,22 @@ class UILoader
 
   var builder: Pointer[_GtkBuilder]
   var env: Env
+  var app: GtkApplication
 
-  new create(envir: Env) =>
+  new create(application: GtkApplication) =>
     """
     Initialise a new UILoader with no elements.
     """
     builder = @gtk_builder_new()
-    env = envir
+    env = application.environment
+    app = application
 
-  new from_string(ui_string: String, envir: Env) =>
+  new from_string(ui_string: String, application: GtkApplication) =>
     """
     Initialise a new UILoader with the elements as parsed from a UI description string.
     """
-    env = envir
+    env = application.environment
+    app = application
     builder = @gtk_builder_new_from_string(ui_string.cstring(), ui_string.size())
 
   fun ref load_ui_from_string(ui_str: String): None ? =>
@@ -65,6 +68,19 @@ class UILoader
     if @gtk_builder_add_from_file(builder, filename.cstring(), addressof err) == U8(0) then
       env.out.print("Error loading file: " + filename)
       error
+    else
+      var i: U8 = 0
+      var window: Pointer[_GObject] = @gtk_builder_get_object(builder, "window".cstring())
+      repeat
+        // Create and show the window
+        var ptr = @gtk_widget_cast(window)
+        var w: GtkWindow = GtkWindow.from_pointer(app, ptr)
+        w.show_window()
+
+        window = @gtk_builder_get_object(builder, ("window" + i.string()).cstring())
+        i = i + 1
+      until window.is_null() end
+      @gtk_builder_connect_signals(builder, None)
     end
 
   fun ref get_object(object_id: String): Pointer[_GObject] =>
