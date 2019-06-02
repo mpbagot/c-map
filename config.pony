@@ -8,7 +8,7 @@ class Config
   """
 
   var project_file: (ProjectFile | None) = None
-  var ui_string: (String | None) = None
+  var ui_string: (String | None)
 
   new create(env: Env) ? =>
     """
@@ -45,7 +45,9 @@ class Config
       end
 
     if cmd.option("headless").bool() then
-      env.out.print("headless arg seen")
+      ui_string = None
+    else
+      ui_string = ""
     end
 
     for arg in cmd.arg("files").string_seq().values() do
