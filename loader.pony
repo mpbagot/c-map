@@ -54,10 +54,12 @@ class UILoader
       repeat
         window = @gtk_builder_get_object(builder, ("window" + i.string()).cstring())
 
-        // Create and show the window
-        var ptr = @gtk_widget_cast(window)
-        var w: GtkWindow = GtkWindow.from_pointer(app, ptr)
-        w.show_window()
+        if not window.is_null() then
+          // Create and show the window
+          var ptr = @gtk_widget_cast(window)
+          var w: GtkWindow = GtkWindow.from_pointer(app, ptr)
+          w.show_window()
+        end
 
         i = i + 1
       until window.is_null() end
