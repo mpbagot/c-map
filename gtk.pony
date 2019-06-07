@@ -10,12 +10,9 @@ class GtkApplication
   var _windows: Array[GtkWindow]
   var _cpointer: Pointer[_GtkApplication] tag
   var environment: Env
-
-  var config: Config
-
   var _saved: Bool = true
 
-  new create(org_name: String, env: Env) ? =>
+  new create(org_name: String, env: Env) =>
     """
     Create a new GtkApplication, initialised with no windows, and a config as
     loaded from the given environment.
@@ -27,8 +24,6 @@ class GtkApplication
     environment = env
 
     _windows = []
-    // Load the config (and project file if required) from the environment args
-    config = Config(env)?
 
   fun get_pointer(): Pointer[_GtkApplication] tag =>
     """
@@ -41,12 +36,6 @@ class GtkApplication
     Return a pointer to this GtkApplication, cast as a GApplication.
     """
     @g_application_cast(_cpointer)
-
-  fun ref set_config(new_config: Config): None =>
-    """
-    Set the program configuration.
-    """
-    config = new_config
 
   fun register_callback(callback_event: String, callback: _GCallback, data: Any) =>
     """
